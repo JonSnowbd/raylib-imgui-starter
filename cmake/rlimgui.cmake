@@ -1,14 +1,14 @@
 include(FetchContent)
 
 # GIT_TAG main is needed for repositories that no longer use the "master" default branch name.
+# GIT_TAG can refer to a branch name, or a commit hash to target an exact version.
 FetchContent_Declare(
     rlimgui_external
     GIT_REPOSITORY https://github.com/raylib-extras/rlImGui.git
     GIT_TAG main
 )
 
-# We're not here for the cmake files inside it, so lets make sure its been
-# downloaded into our _deps
+
 FetchContent_GetProperties(rlimgui_external)
 if(NOT rlimgui_external_POPULATED)
     FetchContent_Populate(rlimgui_external)
