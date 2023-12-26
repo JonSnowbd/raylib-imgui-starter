@@ -4,10 +4,8 @@
 # referring to the CMakeLists.txt in game/ here.
 set(SRC 
     "${CMAKE_CURRENT_SOURCE_DIR}/src/game.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/igExtras.cpp"
 )
 
-# Accessing the variable set in the main CMakeLists.txt
 add_executable(${GAME_NAME} ${SRC})
 target_include_directories(${GAME_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
@@ -16,8 +14,8 @@ target_include_directories(${GAME_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/inc
 # with your add_library() call.
 target_link_libraries(${GAME_NAME} raylib imgui rlimgui)
 
-# Windows specific configuration, disables the terminal on release builds.
 if(WIN32)
+    # Windows specific configuration, disables the terminal on release builds.
     if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         set(WIN32_RELEASE_FLAGS_1 "/ENTRY:mainCRTStartup")
         set(WIN32_RELEASE_FLAGS_2 "/SUBSYSTEM:WINDOWS")
@@ -33,5 +31,13 @@ if(WIN32)
     )
 endif()
 
+# Now lets copy our assets into the binary output folder.
+add_custom_target(
+    copy_assets ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_CURRENT_SOURCE_DIR}/assets"
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets"
+    COMMENT "Copying Assets into output"
+)
 
-
+add_dependencies(${GAME_NAME} copy_assets)

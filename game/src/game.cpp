@@ -1,59 +1,60 @@
-/*******************************************************************************************
-*
-*   raylib-extras [ImGui] example - Simple Integration
-*
-*	This is a simple ImGui Integration
-*	It is done using C++ but with C style code
-*	It can be done in C as well if you use the C ImGui wrapper
-*	https://github.com/cimgui/cimgui
-*
-*   Copyright (c) 2021 Jeffery Myers
-*
-********************************************************************************************/
-
 #include "raylib.h"
 #include "raymath.h"
 
 #include "imgui.h"
+#include "imgui_internal.h"
+
 #include "rlImGui.h"
+
+
+void StyleImgui() 
+{
+	auto& style = ImGui::GetStyle();
+	style.Colors[ImGuiCol_DockingEmptyBg] = ImVec4(0,0,0,0);
+
+	auto& io = ImGui::GetIO();
+	auto* fnt = io.Fonts->AddFontFromFileTTF("assets/fira_sans.ttf", 16.0);
+
+	io.FontDefault = fnt;
+
+	rlImGuiReloadFonts();
+}
 
 int main(int argc, char* argv[])
 {
-	// Initialization
-	//--------------------------------------------------------------------------------------
-	int screenWidth = 1280;
-	int screenHeight = 800;
-
 	SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
-	InitWindow(screenWidth, screenHeight, "ImGui Bootstrap");
+	InitWindow(1280, 720, "ImGui Bootstrap");
 	SetTargetFPS(144);
 	rlImGuiSetup(true);
-
+	
+	// Enable docking
+	auto& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigDockingTransparentPayload = true;
+	
+	StyleImgui();
+	
 	// Main game loop
 	while (!WindowShouldClose())    // Detect window close button or ESC key
 	{
+		// Begin Block
 		BeginDrawing();
-		ClearBackground(DARKGRAY);
-
-		// start ImGui Conent
+		ClearBackground(BLACK);
 		rlImGuiBegin();
 
-		// show ImGui Content
-		bool open = true;
-		ImGui::ShowDemoWindow(&open);
+		// Draw/imgui stuff here
+		ImGui::SetNextWindowBgAlpha(0.0f); // This makes the window-level dock completely seethrough
+		ImGui::DockSpaceOverViewport();
 
-		// end ImGui Content
+		ImGui::ShowDemoWindow();
+
+		// End block
 		rlImGuiEnd();
-
 		EndDrawing();
-		//----------------------------------------------------------------------------------
 	}
-	rlImGuiShutdown();
 
-	// De-Initialization
-	//--------------------------------------------------------------------------------------   
-	CloseWindow();        // Close window and OpenGL context
-	//--------------------------------------------------------------------------------------
+	rlImGuiShutdown(); 
+	CloseWindow();
 
 	return 0;
 }

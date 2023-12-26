@@ -8,7 +8,8 @@ set(GAME_NAME "imgui_template")
 set(CMAKE_CXX_STANDARD 17)
 
 # `set` can be used to overwrite default cmake variables, for example this
-# puts the output into the bin folder.
+# puts the output into the bin folder. This may not be a great idea, but for this
+# simple project, a top level bin folder works fine.
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 # I highly recommend putting all your library dependencies into their own cmake file.
